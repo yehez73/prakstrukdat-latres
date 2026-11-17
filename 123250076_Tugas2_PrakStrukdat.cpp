@@ -91,12 +91,18 @@ NodeStack* popStack() {
     return hapus;
 }
 
-Menu* insertMenu(Menu* root, string nama, string kategori, int harga) {
-    if (root == nullptr) return buatMenu(nama, kategori, harga);
-    if (nama < root->nama)
-        root->left = insertMenu(root->left, nama, kategori, harga);
-    else if (nama > root->nama)
-        root->right = insertMenu(root->right, nama, kategori, harga);
+Menu* insertMenu(Menu* root, string nama, string kategori, int harga, bool& berhasil) {
+    if (root == nullptr) {
+        berhasil = true;
+        return buatMenu(nama, kategori, harga);
+    }
+    if (nama < root->nama) {
+        root->left = insertMenu(root->left, nama, kategori, harga, berhasil);
+    } else if (nama > root->nama) {
+        root->right = insertMenu(root->right, nama, kategori, harga, berhasil);
+    } else {
+        berhasil = false;
+    }
     return root;
 }
 
@@ -172,8 +178,13 @@ int main() {
                 cout << "Masukkan Nama Menu     : "; getline(cin, namaMenu);
                 cout << "Masukkan Kategori      : "; getline(cin, kategori);
                 cout << "Masukkan Harga         : "; cin >> harga;
-                root = insertMenu(root, namaMenu, kategori, harga);
-                cout << "Menu berhasil ditambahkan" << endl;
+                bool berhasil;
+                root = insertMenu(root, namaMenu, kategori, harga, berhasil);
+                if (berhasil) {
+                    cout << "Menu berhasil ditambahkan" << endl;
+                } else {
+                    cout << "Menu dengan nama tersebut sudah ada!" << endl;
+                }
                 break;
 
             case 2:
